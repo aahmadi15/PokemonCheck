@@ -4,10 +4,16 @@ function App() {
   const [pokemon, setPokemon]= useState();
   const [pokemonData, setPokemonData] = useState([]);
   const [pokemonType, setPokemonType] = useState("")
+  const [data, setData] = useState("")
+  const [massPokemon, setMassPokemon] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+   const [toArray] = useState([]);
+  const url = `https://pokeapi.co/api/v2/pokemon?limit=20`;
+const [pokemonList] = useState([])
 
   const getPokemon = async () => {
-    const toArray = [];
+ 
     try {
       const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`
       const res = await fetch(url, {
@@ -15,9 +21,9 @@ function App() {
 }
       )
       const data = await res.json()
-      toArray.push(data);
+      toArray.push(data)
       setPokemonType(data.types[0].type.name)
-      setPokemonData(toArray);
+      setPokemonData(toArray)
       console.log(res)
     } catch(e){
       console.log(e)
@@ -27,38 +33,70 @@ function App() {
 
   useEffect(() => {
     getPokemon()
-  }, [])
+      getAllPokemon()
+    }
+  , []);
 
-  
-  /*const handleOnSubmit = async () => {
-   try {
-    const response = await fetch(`${initialUrl}/${pokemonData}`);
-    const json = await response.json();
-    console.log(json)
-   } catch (error){
-    console.error("Error fetching pokemon:", error);
-   }
-    };
-    */
+const getAllPokemon = async () => {
+
+  const response = await fetch(url);
+  const res = await response.json();
+    
+  const pokemonData = await Promise.all(
+    res.results.slice(0, 10).map (async (p) => {
+      const pokeRes = await fetch(p.url)
+      const pokeData = await pokeRes.json()
+      console.log(pokeData)
+
+      return {
+        name: pokeData.name,
+        image: pokeData.sprites.front_default,
+      };
+    })
+  );
+
+        //setMassPokemon(res.types[0].type.name)        
+        setMassPokemon(pokemonData)
+
+        console.log(pokemonList)
+    }
 
     const handleVal = (e) => {
       setPokemon(e.target.value.toLowerCase())
     }
 
+
     const handleSubmit = (e) => {
       e.preventDefault();
-      getPokemon()
+      getPokemon();
+    }
+
+    const onClick = (e)=>{
+      e.preventDefault();
     }
   return (
-    <div>
-      {
     <>
+
     <div className = "grid-container">
        <form onSubmit={handleSubmit}>
           <label>
             <input type="text" onChange = {handleVal} placeholder="Enter pokedex value"/>
           </label>
+          <button onSubmit={onClick}>More</button>
         </form>  
+    <div id = 'pokedex'>
+      {massPokemon.map((gen)=> {
+        return (
+          <div className='pokemon-load-horizontal'> 
+          <img src = {gen.image}/>
+       
+          
+            {gen.name}
+          </div>
+
+      )
+      })}
+    </div>
         {pokemonData.map((data)=>{
           return(
             <div className='container'>
@@ -86,9 +124,6 @@ function App() {
     </div>
     </>
         
-}
-
-    </div>
   )
 }
 

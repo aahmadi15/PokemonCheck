@@ -82,4 +82,12 @@ transition: background-color 0.3s ease, transform 0.3s ease;
 .pokemon-load-item{
   width: 120px;
   height: 120px;
+} 
+
+.pokemon-load-horizontal{
+  box-shadow: 5px 5px 5px rgb(0 0 0 / 70%);
+transition: background-color 0.3s ease, transform 0.3s ease
+}
+.pokemon-load-horizontal:hover{
+  transform: translateY(4px);
 }

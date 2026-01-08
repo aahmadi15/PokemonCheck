@@ -9,7 +9,7 @@ function App() {
 
   const [loading, setLoading] = useState(true);
    const [toArray] = useState([]);
-  const url = `https://pokeapi.co/api/v2/pokemon?limit=20`;
+  const url = `https://pokeapi.co/api/v2/pokemon?limit=50`;
 const [pokemonList] = useState([])
 
   const getPokemon = async () => {
@@ -43,7 +43,8 @@ const getAllPokemon = async () => {
   const res = await response.json();
     
   const pokemonData = await Promise.all(
-    res.results.slice(0, 10).map (async (p) => {
+    
+    res.results.slice(0, 20).map (async (p) => {
       const pokeRes = await fetch(p.url)
       const pokeData = await pokeRes.json()
       console.log(pokeData)
@@ -73,6 +74,7 @@ const getAllPokemon = async () => {
 
     const onClick = (e)=>{
       e.preventDefault();
+
     }
   return (
     <>
@@ -89,11 +91,8 @@ const getAllPokemon = async () => {
         return (
           <div className='pokemon-load-horizontal'> 
           <img src = {gen.image}/>
-       
-          
             {gen.name}
           </div>
-
       )
       })}
     </div>
@@ -116,9 +115,10 @@ const getAllPokemon = async () => {
                 <div className='divTableCell'>{" "}{Math.round(data.weight/4.3) }</div>
                 </div>
             </div>
+             <button onClick={fetch}>Load More</button>
             </div>
   
-
+           
           )
         })}
     </div>

@@ -9,7 +9,9 @@ function App() {
 
   const [loading, setLoading] = useState(true);
    const [toArray] = useState([]);
-  const url = `https://pokeapi.co/api/v2/pokemon?limit=50`;
+   const limit = 50;
+   const offset = 0;
+  const url = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
 const [pokemonList] = useState([])
 
   const getPokemon = async () => {
@@ -76,6 +78,24 @@ const getAllPokemon = async () => {
       e.preventDefault();
 
     }
+
+    const getPokemons = async() =>{
+      const response = await fetch(url)
+      const res = await response.json();
+
+      const loadMore = await Promise.all(
+        res.results.slice(0, 50).map(async (p)=>{
+          const pokeRes = await fetch(p.url)
+          const pokeData = await pokeRes.json()
+
+          return {
+        name: pokeData.name,
+        image: pokeData.sprites.front_default,
+      };
+        })
+      )
+      setMassPokemon(loadMore)
+    }
   return (
     <>
 
@@ -115,12 +135,11 @@ const getAllPokemon = async () => {
                 <div className='divTableCell'>{" "}{Math.round(data.weight/4.3) }</div>
                 </div>
             </div>
-             <button onClick={fetch}>Load More</button>
             </div>
   
-           
           )
         })}
+        <button onClick={getPokemons}>Load More</button>
     </div>
     </>
         

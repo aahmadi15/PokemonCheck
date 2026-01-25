@@ -91,3 +91,35 @@ transition: background-color 0.3s ease, transform 0.3s ease
 .pokemon-load-horizontal:hover{
   transform: translateY(4px);
 }
+
+ .modal .overlay .active-modal{
+    background: white;
+    display: block;
+    margin: 100px auto 0;
+    font-size: 19px;
+    width: 100vw;
+    height: 100vh;
+    top: 0; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+  }
+
+.overlay{
+  background: rgba(49, 49, 49, 0.8);
+}
+
+.modal .modal-content{
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+
+.active-modal {
+  overflow-y: hidden;
+
+}

@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import ModalComponent from "./ModalComponent"
 function App() {
+
   const [pokemon, setPokemon]= useState();
   const [pokemonData, setPokemonData] = useState([]);
   const [pokemonType, setPokemonType] = useState("")
-  const [data, setData] = useState("")
+  const [limit, setLimit] = useState(20);
   const [massPokemon, setMassPokemon] = useState([]);
-
   const [loading, setLoading] = useState(true);
+  const [open, setIsOpen] = useState(false);
    const [toArray] = useState([]);
-   const limit = 50;
    const offset = 0;
   const url = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
 const [pokemonList] = useState([])
@@ -35,6 +36,7 @@ const [pokemonList] = useState([])
 
   useEffect(() => {
     getPokemon()
+    setLimit(50)
       getAllPokemon()
     }
   , []);
@@ -68,7 +70,6 @@ const getAllPokemon = async () => {
       setPokemon(e.target.value.toLowerCase())
     }
 
-
     const handleSubmit = (e) => {
       e.preventDefault();
       getPokemon();
@@ -76,29 +77,29 @@ const getAllPokemon = async () => {
 
     const onClick = (e)=>{
       e.preventDefault();
-
+      getPokemons()
     }
 
+      
     const getPokemons = async() =>{
       const response = await fetch(url)
       const res = await response.json();
 
       const loadMore = await Promise.all(
-        res.results.slice(0, 50).map(async (p)=>{
+        res.results.map(async (p)=>{
           const pokeRes = await fetch(p.url)
           const pokeData = await pokeRes.json()
-
           return {
         name: pokeData.name,
         image: pokeData.sprites.front_default,
       };
         })
       )
+      setLimit(limit+ 25)
       setMassPokemon(loadMore)
     }
   return (
     <>
-
     <div className = "grid-container">
        <form onSubmit={handleSubmit}>
           <label>
@@ -109,13 +110,20 @@ const getAllPokemon = async () => {
     <div id = 'pokedex'>
       {massPokemon.map((gen)=> {
         return (
-          <div className='pokemon-load-horizontal'> 
+          <div className='pokemon-load-horizontal' onClick={()=> setIsOpen(true)}>
           <img src = {gen.image}/>
             {gen.name}
           </div>
+
       )
       })}
     </div>
+<ModalComponent isOpen={open} onClose={() => setIsOpen(false)}>
+              
+        <h2>Hello</h2>
+        <p>This is my modal content!</p>
+        
+        </ModalComponent> 
         {pokemonData.map((data)=>{
           return(
             <div className='container'>

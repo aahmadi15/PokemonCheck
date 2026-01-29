@@ -8,7 +8,7 @@ function App() {
   const [pokemonType, setPokemonType] = useState("")
   const [limit, setLimit] = useState(20);
   const [massPokemon, setMassPokemon] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedPokemon, setSelectedPokemon] = useState();
   const [open, setIsOpen] = useState(false);
    const [toArray] = useState([]);
    const offset = 0;
@@ -56,6 +56,8 @@ const getAllPokemon = async () => {
       return {
         name: pokeData.name,
         image: pokeData.sprites.front_default,
+        weight: pokeData.weight,
+        height: pokeData.height,  
       };
     })
   );
@@ -92,6 +94,8 @@ const getAllPokemon = async () => {
           return {
         name: pokeData.name,
         image: pokeData.sprites.front_default,
+        weight: pokeData.weight,   
+        height: pokeData.height, 
       };
         })
       )
@@ -110,20 +114,26 @@ const getAllPokemon = async () => {
     <div id = 'pokedex'>
       {massPokemon.map((gen)=> {
         return (
-          <div className='pokemon-load-horizontal' onClick={()=> setIsOpen(true)}>
+          <div className='pokemon-load-horizontal' onClick={()=> {setSelectedPokemon(gen)
+          setIsOpen(true)}}>
           <img src = {gen.image}/>
             {gen.name}
           </div>
-
       )
+      
       })}
-    </div>
-<ModalComponent isOpen={open} onClose={() => setIsOpen(false)}>
-              
-        <h2>Hello</h2>
-        <p>This is my modal content!</p>
+      <ModalComponent isOpen={open} onClose={() => setIsOpen(false)}>
+             
+  <>
+    <h2>{selectedPokemon?.name}</h2>
+    <h2>{Math.floor(selectedPokemon?.weight/4.3) + 'lbs'}</h2>
+    <h1>{selectedPokemon?.height + 'cm'}</h1>
+    <img src={selectedPokemon?.image} />
+  </>
+
         
         </ModalComponent> 
+    </div>
         {pokemonData.map((data)=>{
           return(
             <div className='container'>
